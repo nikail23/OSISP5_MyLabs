@@ -1,1 +1,12 @@
-﻿
+﻿  Source.cpp
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(10,19): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(45,26): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(48,25): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(51,23): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(54,25): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(57,40): warning C4305: аргумент: усечение из "double" в "float"
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(74,27): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(76,24): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(81,26): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\SpriteMovementProject\Source.cpp(83,26): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  SpriteMovementProject.vcxproj -> C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovementSolution\x64\Debug\SpriteMovementProject.exe

@@ -1,8 +1,107 @@
 #include <Windows.h>
+#include <time.h>
+#include <tchar.h>
+#include "Player.h"
 
 const int windowWidth = 640;
 const int windowHeight = 480;
-const wchar_t *windowName = L"ОСИСП. Лабороторная 1.";
+const char *windowName = "ОСИСП. Лабороторная 1.";
+const int UPDATE_INTERVAL = 40;
+float speed = 0.05;
+int timeForFrame = 40;
+int ellapsedTime;
+Player* ptrPlayer;
+
+HDC hdcBack;
+HBITMAP hbmBack;
+HANDLE hndSprite;
+
+void showBitmap(HWND hWnd, HANDLE hndSprite);
+
+LRESULT CALLBACK handleWindowMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    static RECT rect;
+
+    switch (uMsg)
+    {
+        case WM_CREATE:
+        {
+            GetWindowRect(hWnd, &rect);
+            HDC hdc = GetDC(hWnd);
+            hdcBack = CreateCompatibleDC(hdc);
+            hbmBack = CreateCompatibleBitmap(hdc, rect.right - rect.left,
+                rect.bottom - rect.top);
+            break;
+        }
+        return 0;
+
+		case WM_KEYDOWN:
+		{
+			int time = ellapsedTime > UPDATE_INTERVAL ? UPDATE_INTERVAL : ellapsedTime;
+			switch (wParam)
+			{
+			case VK_RIGHT:
+				ptrPlayer->moveRight(time);
+				break;
+			case VK_LEFT:
+				ptrPlayer->moveLeft(time);
+				break;
+			case VK_UP:
+				ptrPlayer->moveUp(time);
+				break;
+			case VK_DOWN:
+				ptrPlayer->moveDown(time);
+				break;
+			case VK_TAB:
+				ptrPlayer->rotateRight(3.1415 / 180);
+				break;
+			}
+			break;
+		}
+		return 0;
+
+		case WM_MOUSEWHEEL:
+		{
+			short delta = HIWORD(wParam);
+			short specialKeys = LOWORD(wParam);
+			int time = ellapsedTime > UPDATE_INTERVAL ? UPDATE_INTERVAL : ellapsedTime;
+			time = time * abs(delta) / 60;
+			if (delta > 0)
+			{
+				if (specialKeys & MK_SHIFT)
+					ptrPlayer->moveRight(time);
+				else
+					ptrPlayer->moveUp(time);
+			}
+			else if (delta < 0)
+			{
+				if (specialKeys & MK_SHIFT)
+					ptrPlayer->moveLeft(time);
+				else
+					ptrPlayer->moveDown(time);
+			}
+			break;
+		}
+		return 0;
+
+		case WM_PAINT:
+		{
+			BeginPaint(hWnd, &ps);			
+			ptrPlayer->drawPlayer(hWnd, hndSprite);
+			EndPaint(hWnd, &ps);
+			break;
+		}
+		return 0;
+
+        case WM_DESTROY:
+        {
+            PostQuitMessage(EXIT_SUCCESS);
+        }
+        return 0;
+    }
+    return DefWindowProc(hWnd, uMsg, wParam, lParam); 
+}
 
 WNDCLASSEX getWindowClass(HINSTANCE hInstance) 
 {
@@ -14,84 +113,54 @@ WNDCLASSEX getWindowClass(HINSTANCE hInstance)
     windowcClassInfo.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
     windowcClassInfo.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
     windowcClassInfo.hInstance = hInstance;
-    windowcClassInfo.lpfnWndProc = [](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) -> LRESULT
-    {
-        switch (uMsg)
-        {
-            case WM_DESTROY:
-            {
-                PostQuitMessage(EXIT_SUCCESS);
-            }
-            return 0;
-        }
-        return DefWindowProc(hWnd, uMsg, wParam, lParam); // вызывается в случае если сообщение не обрабатывается
-    };
-    windowcClassInfo.lpszClassName = L"MyAppClass";
+    windowcClassInfo.lpfnWndProc = handleWindowMessages;
+    windowcClassInfo.lpszClassName = "MyAppClass";
     windowcClassInfo.lpszMenuName = nullptr;
     windowcClassInfo.style = CS_VREDRAW | CS_HREDRAW;
     return windowcClassInfo;
-    /*
-    wc.cbClsExtra = 0; Отвечают за дополнительное выделение памяти в
-    wc.cbWndExtra = 0; классе нашего окна (для записи какой либо информации в окно).
-
-    hbrBackground - Это поле принимает дескриптор кисти которая окрашивает окно.
-    GetStockObject - Возвращает GDI объект который мы можем привести к типу HBRUSH.
-
-    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);     - HANDLE курсора.
-    wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);   - HANDLE иконки.
-    wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION); - HANDLE иконки (отображается сверху слева в заголовке окна).
-
-    wc.lpfnWndProc = [](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) -> LRESULT
-    - Эта процедура отвечает за обработку сообщений (MSG msg{};)
-      Принимает 4 обязательных параметра и возвращает LRESULT (результат).
-      HWND hWnd     - дескриптор окна к которому приходит сообщение.
-      UINT uMsg     - код сообщения.
-      WPARAM wParam - указатель в нём храниться необходимая для сообщения информация.
-      LPARAM lParam - указатель в нём храниться необходимая для сообщения информация.
-
-      wc.lpszClassName = L"MyAppClass";   - имя класса (любое).
-      wc.lpszMenuName = nullptr;          - указатель на имя меню.
-      wc.style = CS_VREDRAW | CS_HREDRAW; - стиль окна (2 флага по умолчанию)
-    */
 }
 
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR szCmdLine, int nCmdShow)
-/*CALLBACK - #define для stdcall (соглашение для вызовов, вызываемый объект будет сам за собой очищать стек
- wWinMain - идентификатор
- HINSTANCE  hInstance - указатель на начало исполняемого модуля, мз сигнатуры. адрес памяти.
- HINSTANCE - не используется был акт. для 16 битных версий виндовс.
- PWSTR szCmdLine - указатель на строку UNICOD символов оканчивающихся нулём. По сути просто аргументы.
- int nCmdShow - параметр отвечающий за то как будет показываться окно (свёрнуто, развёрнуто, на весь экран и т.д.).
-*/
 {
-    MSG message{};                             // Структура, которая содержит в себе информацию о соообщениях (между Windows и окном или между окнами).
-    HWND hWindow{};                          // Дескриптор окна ( HANDLE указ. на объект ядра в котором храниться информация о нашем окне).
-    WNDCLASSEX windowClass = getWindowClass(hInstance); // Эта структура отвечает за некие х-ки окна (в фигурных скобках размеры).Исп. агрегатная инициализация.
+    MSG message{};
+    HWND hWindow{};
+    WNDCLASSEX windowClass = getWindowClass(hInstance);
 
-    if (!RegisterClassEx(&windowClass)) // регистрация в системе класса нашего окна.
+    if (!RegisterClassEx(&windowClass)) 
         return EXIT_FAILURE;
 
-    // создание окна
     if (hWindow = CreateWindow(windowClass.lpszClassName, windowName, WS_OVERLAPPEDWINDOW, 0, 0, windowWidth, windowHeight, nullptr, nullptr, windowClass.hInstance, nullptr); hWindow == INVALID_HANDLE_VALUE)
         return EXIT_FAILURE;
-    /*
-      wc.lpszClassName    - имя класса.
-      L"Заголовок!"       - заголовок окна.
-      WS_OVERLAPPEDWINDOW - стиль окна (стили посмотреть в msdn).
-      0, 0,               - X и Y координаты окна (отсчитываются от левой верхней точки).
-      600, 600,           - ширина, высота.
-     */
 
-    ShowWindow(hWindow, nCmdShow); // показ окна
-    UpdateWindow(hWindow);         // перерисовка окна (передаётся HANDLE)
+	hndSprite = LoadImage(NULL, _T("sprite.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	if (hndSprite == NULL)
+	{
+		MessageBox(NULL, "Bitmap loading failed!", "Error!", MB_OK);
+	}
+																
+	ptrPlayer = new Player(250, 250, 100, 200, speed, hndSprite);
 
-    while (GetMessage(&message, nullptr, 0, 0)) // Цикл обработки сообщений
+    ShowWindow(hWindow, nCmdShow); 
+    UpdateWindow(hWindow);         
+
+	int accumulatedTime = 0;
+	int tm1 = clock();
+	int tm2;
+
+    while (GetMessage(&message, nullptr, 0, 0)) 
     {
-        TranslateMessage(&message); // функция расшифровывает системное сообщение
-        DispatchMessage(&message);  // функция  передаёт сообщение в оконную процедуру на обработку
+		tm2 = clock();
+		ellapsedTime = tm2 - tm1;
+		accumulatedTime += ellapsedTime;
+		tm1 = tm2;
+		if (accumulatedTime >= timeForFrame)
+		{
+			InvalidateRect(hWindow, NULL, FALSE);
+			accumulatedTime -= timeForFrame;
+		}
+        TranslateMessage(&message); 
+        DispatchMessage(&message);  
     }
 
-    return static_cast<int> (message.wParam); // возвращаемое значение точки входа
-    // hWnd - идентификатор окна.
-    // nullptr - нулевой указатель.
+    return static_cast<int> (message.wParam); 
 }
