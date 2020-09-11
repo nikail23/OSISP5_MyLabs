@@ -1,60 +1,47 @@
 #include <Windows.h>
 #include <time.h>
 #include <tchar.h>
-#include "Player.h"
+#include "Sprite.h"
 
 const int windowWidth = 640;
 const int windowHeight = 480;
+const int updateInterval = 40;
 const char *windowName = "ОСИСП. Лабороторная 1.";
-const int UPDATE_INTERVAL = 40;
 float speed = 0.05;
 int timeForFrame = 40;
 int ellapsedTime;
-Player* ptrPlayer;
+
+Sprite* ptrSprite;
 
 HDC hdcBack;
 HBITMAP hbmBack;
 HANDLE hndSprite;
 
-void showBitmap(HWND hWnd, HANDLE hndSprite);
-
 LRESULT CALLBACK handleWindowMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     PAINTSTRUCT ps;
-    static RECT rect;
 
     switch (uMsg)
     {
-        case WM_CREATE:
-        {
-            GetWindowRect(hWnd, &rect);
-            HDC hdc = GetDC(hWnd);
-            hdcBack = CreateCompatibleDC(hdc);
-            hbmBack = CreateCompatibleBitmap(hdc, rect.right - rect.left,
-                rect.bottom - rect.top);
-            break;
-        }
-        return 0;
-
 		case WM_KEYDOWN:
 		{
-			int time = ellapsedTime > UPDATE_INTERVAL ? UPDATE_INTERVAL : ellapsedTime;
+			int time = ellapsedTime > updateInterval ? updateInterval : ellapsedTime;
 			switch (wParam)
 			{
 			case VK_RIGHT:
-				ptrPlayer->moveRight(time);
+				ptrSprite->moveRight(time);
 				break;
 			case VK_LEFT:
-				ptrPlayer->moveLeft(time);
+				ptrSprite->moveLeft(time);
 				break;
 			case VK_UP:
-				ptrPlayer->moveUp(time);
+				ptrSprite->moveUp(time);
 				break;
 			case VK_DOWN:
-				ptrPlayer->moveDown(time);
+				ptrSprite->moveDown(time);
 				break;
 			case VK_TAB:
-				ptrPlayer->rotateRight(3.1415 / 180);
+				ptrSprite->rotateRight(3.1415 / 180);
 				break;
 			}
 			break;
@@ -65,21 +52,21 @@ LRESULT CALLBACK handleWindowMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		{
 			short delta = HIWORD(wParam);
 			short specialKeys = LOWORD(wParam);
-			int time = ellapsedTime > UPDATE_INTERVAL ? UPDATE_INTERVAL : ellapsedTime;
+			int time = ellapsedTime > updateInterval ? updateInterval : ellapsedTime;
 			time = time * abs(delta) / 60;
 			if (delta > 0)
 			{
 				if (specialKeys & MK_SHIFT)
-					ptrPlayer->moveRight(time);
+					ptrSprite->moveRight(time);
 				else
-					ptrPlayer->moveUp(time);
+					ptrSprite->moveUp(time);
 			}
 			else if (delta < 0)
 			{
 				if (specialKeys & MK_SHIFT)
-					ptrPlayer->moveLeft(time);
+					ptrSprite->moveLeft(time);
 				else
-					ptrPlayer->moveDown(time);
+					ptrSprite->moveDown(time);
 			}
 			break;
 		}
@@ -88,7 +75,7 @@ LRESULT CALLBACK handleWindowMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		case WM_PAINT:
 		{
 			BeginPaint(hWnd, &ps);			
-			ptrPlayer->drawPlayer(hWnd, hndSprite);
+			ptrSprite->draw(hWnd, hndSprite);
 			EndPaint(hWnd, &ps);
 			break;
 		}
@@ -138,7 +125,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR szCmdLine, int nCmdS
 		MessageBox(NULL, "Bitmap loading failed!", "Error!", MB_OK);
 	}
 																
-	ptrPlayer = new Player(250, 250, 100, 200, speed, hndSprite);
+	ptrSprite = new Sprite(250, 250, 100, 200, speed, hndSprite);
 
     ShowWindow(hWindow, nCmdShow); 
     UpdateWindow(hWindow);         
@@ -162,5 +149,5 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR szCmdLine, int nCmdS
         DispatchMessage(&message);  
     }
 
-    return static_cast<int> (message.wParam); 
+    return EXIT_SUCCESS; 
 }

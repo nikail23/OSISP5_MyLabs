@@ -10,12 +10,12 @@
     <ClCompile Include="Source.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\MovingSprite\Player.cpp">
+    <ClCompile Include="Sprite.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Sprite.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

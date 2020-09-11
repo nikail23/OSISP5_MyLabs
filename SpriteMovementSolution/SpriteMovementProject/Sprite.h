@@ -4,7 +4,7 @@
 
 #include <windows.h>
 
-class Player
+class Sprite
 {
 	float speed;
 	int x, y, width, height;
@@ -14,7 +14,7 @@ class Player
 	void showBitmap(HDC winDC, HANDLE hndSprite);
 
 public:
-	Player(int x, int y, int width, int height, float speed, HANDLE hndSprite);
+	Sprite(int x, int y, int width, int height, float speed, HANDLE hndSprite);
 	void moveRight(float time);
 	void moveLeft(float time);
 	void moveUp(float time);
@@ -25,7 +25,7 @@ public:
 	int getY();
 	int getWidth();
 	int getHeight();
-	void drawPlayer(HWND hWnd, HANDLE hndSprite);
+	void draw(HWND hWnd, HANDLE hndSprite);
 };
 
 #endif
