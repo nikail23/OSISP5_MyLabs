@@ -1,0 +1,16 @@
+﻿  Sprite.cpp
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(21,10): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(24,10): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(27,10): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(30,10): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(38,16): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(39,17): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(42,73): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(42,57): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(55,16): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\Sprite.cpp(56,17): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+  main.cpp
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\main.cpp(115,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\SpriteMovement\SpriteMovement\main.cpp(122,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  Создание кода...
+  SpriteMovement.vcxproj -> C:\Users\User\Desktop\SpriteMovement\Debug\SpriteMovement.exe
