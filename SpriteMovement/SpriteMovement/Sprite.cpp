@@ -33,7 +33,7 @@ void Sprite::move(Direction direction)
 	checkBorders();
 }
 
-void Sprite::draw(HDC winDC, HWND hWnd, HANDLE hndSprite)
+void Sprite::draw(HDC winDC, HANDLE hndSprite)
 {
 	int halfWidth = width * scale / 2;
 	int halfHeight = height * scale / 2;

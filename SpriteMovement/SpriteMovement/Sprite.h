@@ -16,7 +16,7 @@ class Sprite
 public:
 	Sprite(int x, int y, int width, int height, float speed, HANDLE hndSprite, RECT window);
 	void move(Direction direction);
-	void draw(HDC winDC, HWND hWnd, HANDLE hndSprite);
+	void draw(HDC winDC, HANDLE hndSprite);
 	void setScale(float deltaScale);
 	void setWindowRect(RECT window);
 };
