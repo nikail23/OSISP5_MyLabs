@@ -1,4 +1,4 @@
 ﻿  main.cpp
-C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovement\SpriteMovement\main.cpp(132,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovement\SpriteMovement\main.cpp(139,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovement\SpriteMovement\main.cpp(115,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovement\SpriteMovement\main.cpp(122,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
   SpriteMovement.vcxproj -> C:\Users\User\Desktop\OSISP5_MyLabs\SpriteMovement\Debug\SpriteMovement.exe

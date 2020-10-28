@@ -5,38 +5,26 @@
 #include "resource.h"
 
 Sprite* sprite;
-HDC hdcBack; // контекст граф. у-ва
-HBITMAP hbmBack; // дескриптор битмапа (указатель)
-HANDLE hndSprite; // void*
+HDC hdcBack;
+HBITMAP hbmBack; 
+HANDLE hndSprite; 
 
-LRESULT /* результат обработки сообщения */ CALLBACK WndProc(HWND /* указатель окна */, UINT /* идентификатор сообщения */, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void FillWindowBackground(RECT);
 WNDCLASSEX CreateWindowClassExObject(HINSTANCE);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-/*
-HINSTANCE hInstance – дескриптор экземпляра приложения. 
-Этот дескриптор содержит адрес начала кода программы в ее адресном пространстве. 
-Дескриптор hInstance чаще всего требуется функциям, работающим с ресурсами программы.
-
-HINSTANCE hPrevInstance – дескриптор предыдущего экземпляра приложения. 
-Этот дескриптор остался от старых версий Windows - скорее всего, вам он никогда не пригодится.
-
-LPSTR lpCmdLine – указатель на начало командной строки, введенной при запуске программы.
-
-int nCmdShow – это значение содержит желаемый вид окна (например, свернутый или развернутый)
-*/
 {
-	WNDCLASSEX wc = CreateWindowClassExObject(hInstance); // содержит информацию о классе окна
+	WNDCLASSEX wc = CreateWindowClassExObject(hInstance); 
+	MSG msg;
+	RECT rect;
 
-	if (!RegisterClassEx(&wc)) { // регистрирует класс окна для последующего использования при вызове функции CreateWindow или CreateWindowEx
+	if (!RegisterClassEx(&wc)) { 
 		MessageBox(NULL, "Ошибка регистрации окна!", "Error!", MB_OK);
 		return EXIT_FAILURE;
 	}
 
-	HWND hwnd = CreateWindowEx // Каждому окну Винда присваивает уникальный номер - Window Hundle. 
-	//Это своего рода номер паспорта для окна. 
-	//По этому номеру другие приложения смогут "опознать" окно и проделать с ним какие-либо операции.
+	HWND hwnd = CreateWindowEx  
 	(
 		WS_EX_CLIENTEDGE, 
 		"WindowClass", 
@@ -64,20 +52,15 @@ int nCmdShow – это значение содержит желаемый вид окна (например, свернутый или 
 		return EXIT_FAILURE;
 	}
 
-	RECT rect; // прямоугольник
-	GetClientRect(hwnd, &rect); // извлекает координаты рабочей области окна. 
-	//Рабочие координаты определяют левый верхний и нижний правый углы рабочей области
-	sprite = new Sprite(50, 50, 50, 50, 4, hndSprite, rect);
+	GetClientRect(hwnd, &rect); 
+	sprite = new Sprite(200, 200, 50, 50, 4, hndSprite, rect);
 
 	ShowWindow(hwnd, nCmdShow);
-	// устанавливает состояние показа определяемого окна
 
-
-	MSG msg; // Содержит информацию о сообщении из очереди сообщений потока
-	while (GetMessage(&msg, NULL, 0, 0)) // извлекает сообщение из очереди сообщений вызывающего потока и помещает его в заданную структуру
+	while (GetMessage(&msg, NULL, 0, 0)) 
 	{
-		TranslateMessage(&msg); // переводит сообщения виртуальных клавиш в символьные сообщения
-		DispatchMessage(&msg); // распределяет сообщение оконной процедуре
+		TranslateMessage(&msg); 
+		DispatchMessage(&msg); 
 	}
 
 	return msg.wParam;
@@ -85,7 +68,7 @@ int nCmdShow – это значение содержит желаемый вид окна (например, свернутый или 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
-	PAINTSTRUCT ps; // содержит информации для приложения. Эта информация может быть использована для окраски клиентской области окна, которым владеет приложение.
+	PAINTSTRUCT ps; 
 	static RECT rect;
 
 	switch (Message) {
@@ -144,37 +127,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_PAINT:
 		{
-			BeginPaint(hWnd, &ps); //Функция BeginPaint автоматически заставляет 
-			// регион отсечения контекста устройства исключать любую область вне обновляемого региона
-			GetClientRect(hWnd, &rect); // извлекает координаты рабочей области окна
+			BeginPaint(hWnd, &ps); 
+			GetClientRect(hWnd, &rect); 
 			hdcBack = CreateCompatibleDC(ps.hdc);
-			//создает контекст устройства в памяти (DC), совместимый с заданным устройством. ... 
-			//Если этот дескриптор равен ПУСТО (NULL), функция создает контекст устройства в памяти, 
-			//совместимый с текущим экраном приложения
 			hbmBack = CreateCompatibleBitmap(ps.hdc, rect.right - rect.left, rect.bottom - rect.top);
-			//создает точечный рисунок, совместимый с устройством, которое связано с заданным контекстом устройства
 			HBITMAP oldBmp = (HBITMAP)SelectObject(hdcBack, hbmBack);
-			// Выбиpает логический объект для DC. 
-			//В каждый момент вpемени может быть выбpан только один объект, котоpый должен удаляться сpазу же, 
-			//как только пеpестает использоваться
 			FillWindowBackground(rect);
 			sprite->draw(hdcBack, hndSprite);
 			BitBlt(ps.hdc, 0, 0, ps.rcPaint.right, ps.rcPaint.bottom, hdcBack, 0, 0, SRCCOPY);
-			// выполняет передачу битовых блоков данных о цвете, 
-			// соответствующих прямоугольнику пикселей из заданного исходного контекста устройства
-			// в целевой контекст устройства
 			SelectObject(hdcBack, oldBmp);
 			DeleteObject(hbmBack);
-			// Эта функция возвращает ранее выбранный объект указанного типа. 
-			// Приложение должно всегда заменять новый объект оригинальным объектом по умолчанию после завершения рисования новым объектом
 			DeleteDC(hdcBack);
-			//Удаляет контекст устpойства. 
-			//Если DC является последним контекстом для устpойства, 
-			// уведомляет устpойство и освобождает всю память и pесуpсы системы
 			EndPaint(hWnd, &ps);
-			// Функция EndPaint отмечает конец окрашивания в заданном окне.
-			// Эта функция требуется для каждого вызова в функции BeginPaint, но только после того, 
-			// как окрашивание завершается полностью
 			break;
 		}
 		case WM_SIZE:
@@ -212,6 +176,6 @@ void FillWindowBackground(RECT rect)
 	br.lbStyle = BS_SOLID;
 	br.lbColor = 0xFFFFFF;
 	HBRUSH brush;
-	brush = CreateBrushIndirect(&br); // Функция CreateBrushIndirect создает логическую кисть с указанным стилем, цветом и узором
+	brush = CreateBrushIndirect(&br); 
 	FillRect(hdcBack, &rect, brush);
 }

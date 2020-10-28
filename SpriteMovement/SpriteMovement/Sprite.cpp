@@ -8,7 +8,7 @@ Sprite::Sprite(int x, int y, int width, int height, float speed, HANDLE hndSprit
 	this->width = width;
 	this->height = height;
 	this->speed = speed;
-	this->window = window;
+	this->windowRect = window;
 	scale = 1;
 	GetObject(hndSprite, sizeof(BITMAP), &Bmp);
 }
@@ -30,7 +30,7 @@ void Sprite::move(Direction direction)
 			x = x + speed;
 			break;
 	}
-	checkBorders();
+	checkWindowBorders();
 }
 
 void Sprite::draw(HDC winDC, HANDLE hndSprite)
@@ -50,24 +50,24 @@ void Sprite::setScale(float deltaScale)
 		scale = 1;
 }
 
-void Sprite::checkBorders()
+void Sprite::checkWindowBorders()
 {
 	int halfWidth = width * scale / 2;
 	int halfHeight = height * scale / 2;
 
-	if (x + halfWidth > window.right)
-		x = window.right - halfWidth;
+	if (x + halfWidth > windowRect.right)
+		x = windowRect.right - halfWidth;
 	if (x - halfWidth < 0)
 		x = halfWidth;
-	if (y + halfHeight > window.bottom)
-		y = window.bottom - halfHeight;
+	if (y + halfHeight > windowRect.bottom)
+		y = windowRect.bottom - halfHeight;
 	if (y - halfHeight < 0)
 		y = halfHeight;
 }
 
-void Sprite::setWindowRect(RECT window)
+void Sprite::setWindowRect(RECT windowRect)
 {
-	this->window = window;
-	checkBorders();
+	this->windowRect = windowRect;
+	checkWindowBorders();
 }
 

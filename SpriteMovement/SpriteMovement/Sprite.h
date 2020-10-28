@@ -10,9 +10,9 @@ class Sprite
 	float speed, scale;
 	int x, y, width, height;
 	BITMAP Bmp;
-	RECT window;
+	RECT windowRect;
 
-	void checkBorders();
+	void checkWindowBorders();
 public:
 	Sprite(int x, int y, int width, int height, float speed, HANDLE hndSprite, RECT window);
 	void move(Direction direction);
