@@ -1,0 +1,6 @@
+﻿  Source.cpp
+C:\Users\User\Desktop\OSISP5_MyLabs\RegisterSolution\RegisterProject\Source.cpp(53,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\User\Desktop\OSISP5_MyLabs\RegisterSolution\RegisterProject\Source.cpp(93,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\User\Desktop\OSISP5_MyLabs\RegisterSolution\RegisterProject\Source.cpp(301,8): warning C4101: disposition: неиспользованная локальная переменная
+C:\Users\User\Desktop\OSISP5_MyLabs\RegisterSolution\RegisterProject\Source.cpp(300,7): warning C4101: currentKey: неиспользованная локальная переменная
+  RegisterProject.vcxproj -> C:\Users\User\Desktop\OSISP5_MyLabs\RegisterSolution\Debug\RegisterProject.exe
